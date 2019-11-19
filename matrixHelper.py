@@ -23,8 +23,28 @@ def randonGraphGen(width = 1000, height = 1000, locations):
         rand_pos = random.randint(width), random.randint(height)
         locations_map.add(loc, rand_pos)
 
+    adj_matrix = np.zeros(shape=(num_locs, num_locs))
 
+    i = 0
 
+    for start in location_map.keys():
+        j = i
+        for end in location_map.keys():
+
+            if 1 == j:
+                adj_matrix[i][j] = -1
+
+            dist = euclidean_dist(location_map[start], location_map[end])
+            adj_matrix[i
+            ][j] = dist
+            j += 1
+
+        i += 1
+
+    return adj_matrix   
+
+def euclidean_dist(pos1, pos2):
+    return np.sqrt((pos1[0]-pos2[0])**2 +(pos1[1]-pos2[1])**2)
 
 
 def printMatrix(m):
