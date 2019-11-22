@@ -1,8 +1,3 @@
-import scipy as sp
-import numpy as np
-import random
-
-
 def matrixExpander(m):
     matrix=m.copy()
     #expanding horizontally
@@ -13,54 +8,75 @@ def matrixExpander(m):
         inverseMatrix=matrix.copy()[::-1]
     matrix+=inverseMatrix
     return matrix
-
-def randonGraphGen(width = 1000, height = 1000, locations):
-
-    num_locs = len(locations)
-    location_map  = dict()
-
-    for loc in locations:
-        rand_pos = random.randint(width), random.randint(height)
-        locations_map.add(loc, rand_pos)
-
-    adj_matrix = np.zeros(shape=(num_locs, num_locs))
-
-    i = 0
-
-    for start in location_map.keys():
-        j = i
-        for end in location_map.keys():
-
-            if 1 == j:
-                adj_matrix[i][j] = -1
-
-            dist = euclidean_dist(location_map[start], location_map[end])
-            adj_matrix[i
-            ][j] = dist
-            j += 1
-
-        i += 1
-
-    return adj_matrix   
-
-def euclidean_dist(pos1, pos2):
-    return np.sqrt((pos1[0]-pos2[0])**2 +(pos1[1]-pos2[1])**2)
-
-
 def printMatrix(m):
     for i in range(len(m)):
         for j in range(len(m)):
             print(m[i][j],end=' ')
         print('\n')
 
-matrix5=matrixExpander([[0,1,3,5,5],[1,0,2,4,5],[3,2,0,3,6],[5,4,3,0,4],[5,5,6,4,0]])
-matrix10=matrixExpander(matrix5)
+def writeMatrix(matrix, f):
+    for i in range(len(matrix)):
+        for j in range(len(matrix)):
+            if j != len(matrix) - 1:
+                f.write(str(matrix[i][j]) + ' ')
+            else:
+                f.write(str(matrix[i][j]))
+        if i != len(matrix) - 1:
+            f.write('\n')
+
+def writeRandomHouses(f, maxTA, matrixOrder):
+    homes=''
+    numHomes=0
+
+    for i in range(0,matrixOrder,6):
+        if(numHomes+4>=maxTA):
+            break
+        homes+=str(i+2)+' '+str(i+4)+' '+str(i+5)+' '+str(i+6)+' '
+        numHomes+=4
+    f.write(str(numHomes))
+    f.write('\n')
+
+    for i in range(1, matrixOrder+1):
+        if i != matrixOrder:
+            f.write(str(i)+" ")
+        else:
+            f.write(str(i))
+            f.write('\n')
+    f.write(str(homes))
+
+def writeInputFile(matrixOrder, matrix, f, maxTA, source):
+    f.write(str(matrixOrder))
+    f.write('\n')
+    writeRandomHouses(f, maxTA, matrixOrder)
+    f.write('\n')
+    f.write(str(source))
+    f.write('\n')
+    writeMatrix(matrix, f)
+
+
+
+
+
+
+
+
+matrix12=matrixExpander([[0,10,14,12,16,28],[10,0,20,0,0,34],[14,20,0,8,12,0],[12,0,8,0,0,38],[16,0,12,0,0,18],[28,34,0,38,18,0]])
+matrix24=matrixExpander(matrix12)
+matrix48=matrixExpander(matrix24)
+# matrix96=matrixExpander(matrix48)
+#
+# matrix192=matrixExpander(matrix96)
+""""matrix10=matrixExpander(matrix5)
 matrix20=matrixExpander(matrix10)
 matrix40=matrixExpander(matrix20)
-for i in range(len(matrix20)):
-    for j in range(len(matrix20)):
-        if matrix20[i][j] == 0:
-            matrix20[i][j] = 'x'
-print(len(matrix20))
-print(len(matrix20[1]))
-printMatrix(matrix20)
+matrix80=matrixExpander(matrix40)
+matrix160=matrixExpander(matrix80)"""
+
+for i in range(len(matrix48)):
+    for j in range(len(matrix48)):
+        if matrix48[i][j] == 0:
+            matrix48[i][j] = 'x'
+
+f = open("50x.in", "w+")
+writeInputFile(48, matrix48, f, 25, 1)
+f.close()
